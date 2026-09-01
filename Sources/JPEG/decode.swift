@@ -593,7 +593,7 @@ extension JPEG.Header.Frame {
                     break
                 default:
                     throw JPEG.ParsingError.invalidFrameQuantizationSelector(
-                        component.selector,
+                        .init(selector: component.selector),
                         process
                     )
                 }
@@ -738,7 +738,7 @@ extension JPEG.Header.Scan {
                     break
                 default:
                     throw JPEG.ParsingError.invalidScanHuffmanDCSelector(
-                        component.selector.dc, process
+                        .init(selector: component.selector.dc), process
                     )
                 }
                 switch component.selector.ac {
@@ -746,7 +746,7 @@ extension JPEG.Header.Scan {
                     break
                 default:
                     throw JPEG.ParsingError.invalidScanHuffmanACSelector(
-                        component.selector.ac, process
+                        .init(selector: component.selector.ac), process
                     )
                 }
             }
@@ -2407,11 +2407,15 @@ extension JPEG.Data.Spectral.Plane {
     ) throws {
         guard let dc: JPEG.Table.HuffmanDC.Decoder =
         slots.dc[keyPath: component.selector.dc]?.decoder() else {
-            throw JPEG.DecodingError.undefinedScanHuffmanDCReference(component.selector.dc)
+            throw JPEG.DecodingError.undefinedScanHuffmanDCReference(
+                .init(selector: component.selector.dc)
+            )
         }
         guard let ac: JPEG.Table.HuffmanAC.Decoder =
         slots.ac[keyPath: component.selector.ac]?.decoder() else {
-            throw JPEG.DecodingError.undefinedScanHuffmanACReference(component.selector.ac)
+            throw JPEG.DecodingError.undefinedScanHuffmanACReference(
+                .init(selector: component.selector.ac)
+            )
         }
 
         let rows: Range<Int> =
@@ -2473,7 +2477,9 @@ extension JPEG.Data.Spectral.Plane {
     ) throws {
         guard let table: JPEG.Table.HuffmanDC.Decoder =
         slots[keyPath: component.selector.dc]?.decoder() else {
-            throw JPEG.DecodingError.undefinedScanHuffmanDCReference(component.selector.dc)
+            throw JPEG.DecodingError.undefinedScanHuffmanDCReference(
+                .init(selector: component.selector.dc)
+            )
         }
 
         let rows: Range<Int> =
@@ -2528,7 +2534,9 @@ extension JPEG.Data.Spectral.Plane {
     ) throws {
         guard let table: JPEG.Table.HuffmanAC.Decoder =
         slots[keyPath: component.selector.ac]?.decoder() else {
-            throw JPEG.DecodingError.undefinedScanHuffmanACReference(component.selector.ac)
+            throw JPEG.DecodingError.undefinedScanHuffmanACReference(
+                .init(selector: component.selector.ac)
+            )
         }
 
         let rows: Range<Int>     = blocks.lowerBound / self.units.x ..<
@@ -2573,7 +2581,9 @@ extension JPEG.Data.Spectral.Plane {
     ) throws {
         guard let table: JPEG.Table.HuffmanAC.Decoder =
         slots[keyPath: component.selector.ac]?.decoder() else {
-            throw JPEG.DecodingError.undefinedScanHuffmanACReference(component.selector.ac)
+            throw JPEG.DecodingError.undefinedScanHuffmanACReference(
+                .init(selector: component.selector.ac)
+            )
         }
 
         let rows: Range<Int>     = blocks.lowerBound / self.units.x ..<
@@ -2671,13 +2681,13 @@ extension JPEG.Data.Spectral {
             guard let dc: JPEG.Table.HuffmanDC.Decoder =
             slots.dc[keyPath: $0.component.selector.dc]?.decoder() else {
                 throw JPEG.DecodingError.undefinedScanHuffmanDCReference(
-                    $0.component.selector.dc
+                    .init(selector: $0.component.selector.dc)
                 )
             }
             guard let ac: JPEG.Table.HuffmanAC.Decoder =
             slots.ac[keyPath: $0.component.selector.ac]?.decoder() else {
                 throw JPEG.DecodingError.undefinedScanHuffmanACReference(
-                    $0.component.selector.ac
+                    .init(selector: $0.component.selector.ac)
                 )
             }
 
@@ -2798,7 +2808,7 @@ extension JPEG.Data.Spectral {
             guard let huffman: JPEG.Table.HuffmanDC.Decoder =
             slots[keyPath: $0.component.selector.dc]?.decoder() else {
                 throw JPEG.DecodingError.undefinedScanHuffmanDCReference(
-                    $0.component.selector.dc
+                    .init(selector: $0.component.selector.dc)
                 )
             }
             let factor: (x: Int, y: Int) = self.layout.planes[$0.c].component.factor
@@ -2918,7 +2928,9 @@ extension JPEG.Data.Spectral {
                 Int,
                 JPEG.Table.Quantization.Key
             ) = slots[keyPath: selector] else {
-                throw JPEG.DecodingError.undefinedScanQuantizationReference(selector)
+                throw JPEG.DecodingError.undefinedScanQuantizationReference(
+                    .init(selector: selector)
+                )
             }
 
             self[p].q                = q
