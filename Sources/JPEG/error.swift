@@ -196,7 +196,7 @@ extension JPEG {
         ///
         /// -   Parameter process:
         ///     The coding process specified by the frame header.
-        case invalidFrameQuantizationSelector(JPEG.Table.Quantization.Selector, Process)
+        case invalidFrameQuantizationSelector(JPEG.Slot, Process)
         /// A component in a frame header had an invalid sampling factor.
         ///
         /// Sampling factors must be within the range `1 ... 4`.
@@ -227,7 +227,7 @@ extension JPEG {
         ///
         /// -   Parameter process:
         ///     The coding process specified by the frame header.
-        case invalidScanHuffmanDCSelector(JPEG.Table.HuffmanDC.Selector, Process)
+        case invalidScanHuffmanDCSelector(JPEG.Slot, Process)
         /// A component in a frame header segment used an AC huffman table
         /// selector which is well-formed but unavailable given the frame header coding process.
         ///
@@ -236,7 +236,7 @@ extension JPEG {
         ///
         /// -   Parameter process:
         ///     The coding process specified by the frame header.
-        case invalidScanHuffmanACSelector(JPEG.Table.HuffmanAC.Selector, Process)
+        case invalidScanHuffmanACSelector(JPEG.Slot, Process)
         /// A scan header had more that the maximum allowed number of components
         /// given the image coding process.
         ///
@@ -426,10 +426,10 @@ extension JPEG {
                 }
             case .invalidFrameQuantizationSelectorCode(let code):
                 return "quantization table selector code (\(code)) must be within 0 ... 3"
-            case .invalidFrameQuantizationSelector(let selector, let process):
+            case .invalidFrameQuantizationSelector(let slot, let process):
                 return """
                 quantization table selector (\(
-                    String.init(selector: selector)
+                    String.init(slot: slot)
                 )) is not allowed for coding process '\(
                     process
                 )'
@@ -447,18 +447,18 @@ extension JPEG {
                 return """
                 huffman table selector pair code (\(code)) must be within 0 ... 3 or 16 ... 19
                 """
-            case .invalidScanHuffmanDCSelector(let selector, let process):
+            case .invalidScanHuffmanDCSelector(let slot, let process):
                 return """
                 dc huffman table selector (\(
-                    String.init(selector: selector)
+                    String.init(slot: slot)
                 )) is not allowed for coding process '\(
                     process
                 )'
                 """
-            case .invalidScanHuffmanACSelector(let selector, let process):
+            case .invalidScanHuffmanACSelector(let slot, let process):
                 return """
                 ac huffman table selector (\(
-                    String.init(selector: selector)
+                    String.init(slot: slot)
                 )) is not allowed for coding process '\(
                     process
                 )'
@@ -608,19 +608,19 @@ extension JPEG {
         ///
         /// -   Parameter _:
         ///     The table selector.
-        case undefinedScanHuffmanDCReference(Table.HuffmanDC.Selector)
+        case undefinedScanHuffmanDCReference(JPEG.Slot)
         /// An AC huffman table selector in a scan referenced a table
         /// slot with no bound table.
         ///
         /// -   Parameter _:
         ///     The table selector.
-        case undefinedScanHuffmanACReference(Table.HuffmanAC.Selector)
+        case undefinedScanHuffmanACReference(JPEG.Slot)
         /// A quantization table selector in the first scan for a particular
         /// component referenced a table slot with no bound table.
         ///
         /// -   Parameter _:
         ///     The table selector.
-        case undefinedScanQuantizationReference(Table.Quantization.Selector)
+        case undefinedScanQuantizationReference(JPEG.Slot)
         /// A quantization table had the wrong precision mode for the image
         /// color format.
         ///
@@ -804,22 +804,22 @@ extension JPEG {
                 """
             case .invalidScanSamplingVolume(let volume):
                 return "scan mcu sample volume (\(volume)) can be at most 10"
-            case .undefinedScanHuffmanDCReference(let selector):
+            case .undefinedScanHuffmanDCReference(let slot):
                 return """
                 no dc huffman table has been installed at the location <\(
-                    String.init(selector: selector)
+                    String.init(slot: slot)
                 )>
                 """
-            case .undefinedScanHuffmanACReference(let selector):
+            case .undefinedScanHuffmanACReference(let slot):
                 return """
                 no ac huffman table has been installed at the location <\(
-                    String.init(selector: selector)
+                    String.init(slot: slot)
                 )>
                 """
-            case .undefinedScanQuantizationReference(let selector):
+            case .undefinedScanQuantizationReference(let slot):
                 return """
                 no quantization table has been installed at the location <\(
-                    String.init(selector: selector)
+                    String.init(slot: slot)
                 )>
                 """
             case .invalidScanQuantizationPrecision(let precision):

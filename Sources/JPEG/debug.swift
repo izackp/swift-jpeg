@@ -34,6 +34,24 @@ extension String {
     }
 }
 
+extension String {
+    public init(slot: JPEG.Slot) {
+        switch slot {
+        case .slot0:
+            self = "0"
+        case .slot1:
+            self = "1"
+        case .slot2:
+            self = "2"
+        case .slot3:
+            self = "3"
+
+        case .unavailable:
+            self = "<unavailable>"
+        }
+    }
+}
+
 extension JPEG.Process: CustomStringConvertible {
     public var description: String {
         switch self {

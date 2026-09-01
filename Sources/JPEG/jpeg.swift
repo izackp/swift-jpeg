@@ -726,6 +726,32 @@ extension JPEG {
         }
     }
 
+    public enum Slot: Hashable, Sendable, CaseIterable {
+        case slot0
+        case slot1
+        case slot2
+        case slot3
+        case unavailable
+
+        public init<Delegate>(
+            selector: WritableKeyPath<(Delegate?, Delegate?, Delegate?, Delegate?), Delegate?>
+        ) {
+            switch selector {
+            case \.0:
+                self = .slot0
+            case \.1:
+                self = .slot1
+            case \.2:
+                self = .slot2
+            case \.3:
+                self = .slot3
+
+            default:
+                self = .unavailable
+            }
+        }
+    }
+
     /// Functionality common to all table types.
     public protocol AnyTable {
         /// A type representing a table instance while it is bound to a table slot.
